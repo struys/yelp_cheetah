@@ -30,3 +30,15 @@ clean:
 	rm -rf .tox
 	rm -rf ./venv-*
 	rm -f .venv.touch
+
+
+
+wrapper=gdb,-x,/usr/lib/debug/usr/bin/python2.7-dbg-gdb.py,-ex,r,--args
+export CC := /home/buck/trees/theirs/gcc-python-plugin/gcc-with-cpychecker --maxtrans=1000000 --dump-json -wrapper $(wrapper)
+
+.PHONY: refcount
+refcount:
+	rm -rf build/lib*
+	rm -f build/temp.linux-x86_64-2.7/*.{o,html,json}
+	python setup.py build
+	find build -regex '.*\.\(html\|json\)' | xargs git add -f
